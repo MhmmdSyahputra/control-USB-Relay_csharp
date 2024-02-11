@@ -17,7 +17,22 @@ namespace YourNamespace
         static async Task Main(string[] args)
         {
             await RefreshDevices();
-            await SelectRelay();
+
+            if (args.Length >= 1)
+            {
+                int deviceIndex;
+                if (!int.TryParse(args[0], out deviceIndex) || deviceIndex < 1 || deviceIndex > devices.Length)
+                {
+                    Console.WriteLine("Invalid device index.");
+                    return;
+                }
+                selectedRelay = new Relay(devices[deviceIndex - 1].RelayInfo);
+            }
+            else
+            {
+                await SelectRelay();
+            }
+
             ToggleRelayConnection();
             await RelayOpen();
         }
